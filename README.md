@@ -27,6 +27,16 @@ For example, it won't work in the following cases (usually will show large ppmDi
 In matlab,simply run Autocorr.m (or type Autocorr in command window). Once prompt, select the csv file(s) you want to correct: The default tracer purity is 99% for all.  In cases you need to change this, you can manually pass a parameter: 'impurity'. impurity is a numerical array with the default value of [0.01, 0.01, 0.01, 0.01] for 13C, 15N, 2D, 18O (must be in the correct ordering, leave it 0 if not relavent) \
 * for example: Autocorr([0.02, 0.05, 0, 0]) will specifies 13C impurity to be 2% and 15N to be 5%.
 
+# Web (HTML) Usage
+This repo also includes a small web app version that accepts the same El-MAVEN CSV export and generates the same Excel output as MATLAB (`original`, `cor_pct`, `cor_abs`, `total` sheets).
+
+1. Install dependencies:
+   - `python3 -m pip install -r requirements.txt`
+2. Start the server:
+   - `python3 webapp/app.py`
+3. Open the page in your browser and upload your CSV:
+   - `http://localhost:8000`
+
 # Output
 If suscessful, you will see 'done' at the end of each file correction, and an output file "filename_cor.xlsx" will be generated. 
 
