@@ -37,6 +37,13 @@ This repo also includes a small web app version that accepts the same El-MAVEN C
 3. Open the page in your browser and upload your CSV:
    - `http://localhost:8000`
 
+# Web (100% JS/HTML, no backend)
+There is also a browser-only version (no server required) in `web-js/`.
+
+- Open `web-js/index.html` in a browser
+- Upload your CSV
+- It will download `*_cor.xlsx`
+
 # Output
 If suscessful, you will see 'done' at the end of each file correction, and an output file "filename_cor.xlsx" will be generated. 
 
