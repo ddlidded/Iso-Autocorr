@@ -3,59 +3,150 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Iso-Autocorr (100% JS)</title>
-    <style>
-      :root { --bg:#0b1220; --card:#0f1a2e; --text:#e7eefc; --muted:#a7b4d1; --border:#223458; --accent:#67b0ff; --danger:#ff6b6b; }
-      *{box-sizing:border-box}
-      body{margin:0;min-height:100vh;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:radial-gradient(1200px 700px at 20% 0%, #132448 0%, var(--bg) 55%);color:var(--text);display:grid;place-items:center;padding:24px}
-      main{width:min(980px,100%);background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
-      h1{margin:0 0 10px;font-size:28px}
-      p{margin:8px 0;color:var(--muted)}
-      code{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);padding:2px 6px;border-radius:6px}
-      form{margin-top:14px;display:grid;gap:14px}
-      label>span{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-      input[type=file],input[type=number]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:rgba(0,0,0,.18);color:var(--text)}
-      fieldset{border:1px solid var(--border);border-radius:12px;padding:12px}
-      legend{padding:0 8px;color:var(--muted);font-size:13px}
-      .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-      button{justify-self:start;border:1px solid rgba(103,176,255,.35);background:linear-gradient(180deg, rgba(103,176,255,.35), rgba(103,176,255,.18));color:var(--text);padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:600}
-      button:disabled{opacity:.6;cursor:not-allowed}
-      .status{margin-top:12px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);border-radius:12px;padding:10px 12px;color:var(--muted);font-size:13px;white-space:pre-wrap}
-      .error{border-color:rgba(255,107,107,.35);background:rgba(255,107,107,.10);color:#ffd6d6}
-      .tiny{font-size:12px;color:var(--muted)}
-      @media (max-width:720px){.grid{grid-template-columns:1fr}}
-    </style>
+    <title>Iso-Autocorr (JS)</title>
+
+    <!-- Tailwind (CDN) + Flowbite (light theme) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica", "Arial"],
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
   </head>
   <body>
-    <main>
-      <h1>Iso-Autocorr (100% JS)</h1>
-      <p>Client-side only: upload an El-MAVEN CSV export and download the corrected <code>_cor.xlsx</code> with sheets <code>original</code>, <code>cor_pct</code>, <code>cor_abs</code>, <code>total</code>. No server required.</p>
-
-      <form id="form">
-        <label>
-          <span>CSV file</span>
-          <input id="file" type="file" accept=".csv,text/csv" required />
-        </label>
-
-        <fieldset>
-          <legend>Tracer impurity (defaults match MATLAB)</legend>
-          <div class="grid">
-            <label><span>13C impurity</span><input id="impC" type="number" step="0.0001" min="0" max="1" value="0.01" /></label>
-            <label><span>15N impurity</span><input id="impN" type="number" step="0.0001" min="0" max="1" value="0.01" /></label>
-            <label><span>2D impurity</span><input id="impD" type="number" step="0.0001" min="0" max="1" value="0.01" /></label>
-            <label><span>18O impurity</span><input id="impO" type="number" step="0.0001" min="0" max="1" value="0.01" /></label>
+    <div class="min-h-screen bg-gray-50 text-gray-900">
+      <div class="mx-auto max-w-4xl px-4 py-10 sm:py-14">
+        <div class="mb-8 flex items-start justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">Iso-Autocorr</h1>
+            <p class="mt-2 text-sm text-gray-600">
+              100% browser-side: upload an El-MAVEN CSV export and download the corrected
+              <span class="font-mono">_cor.xlsx</span> with sheets
+              <span class="font-mono">original</span>, <span class="font-mono">cor_pct</span>,
+              <span class="font-mono">cor_abs</span>, <span class="font-mono">total</span>.
+            </p>
           </div>
-        </fieldset>
+          <span class="hidden rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-200 sm:inline">
+            No backend
+          </span>
+        </div>
 
-        <button id="run" type="submit">Generate corrected Excel</button>
-        <div id="status" class="status" aria-live="polite">Idle.</div>
-        <div class="tiny">Tip: for best results, use the same high-res fully-resolved El-MAVEN export format as the MATLAB tool.</div>
-      </form>
-    </main>
+        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+          <form id="form" class="space-y-6">
+            <div>
+              <label class="mb-2 block text-sm font-medium text-gray-900" for="file">CSV file</label>
+              <input
+                id="file"
+                class="block w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="file"
+                accept=".csv,text/csv"
+                required
+              />
+              <p class="mt-2 text-xs text-gray-500">
+                Upload the same high-res fully-resolved El-MAVEN export format expected by the MATLAB version.
+              </p>
+            </div>
+
+            <div class="rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-5">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h2 class="text-sm font-semibold text-gray-900">Tracer impurity</h2>
+                  <p class="mt-1 text-xs text-gray-600">Defaults match MATLAB: 0.01 for each tracer.</p>
+                </div>
+              </div>
+
+              <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-gray-900" for="impC">13C impurity</label>
+                  <input
+                    id="impC"
+                    type="number"
+                    step="0.0001"
+                    min="0"
+                    max="1"
+                    value="0.01"
+                    class="block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-gray-900" for="impN">15N impurity</label>
+                  <input
+                    id="impN"
+                    type="number"
+                    step="0.0001"
+                    min="0"
+                    max="1"
+                    value="0.01"
+                    class="block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-gray-900" for="impD">2D impurity</label>
+                  <input
+                    id="impD"
+                    type="number"
+                    step="0.0001"
+                    min="0"
+                    max="1"
+                    value="0.01"
+                    class="block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-gray-900" for="impO">18O impurity</label>
+                  <input
+                    id="impO"
+                    type="number"
+                    step="0.0001"
+                    min="0"
+                    max="1"
+                    value="0.01"
+                    class="block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <button
+                id="run"
+                type="submit"
+                class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Generate corrected Excel
+              </button>
+
+              <p class="text-xs text-gray-500">
+                Runs locally in your browser. Large files may take a bit.
+              </p>
+            </div>
+
+            <div id="statusWrap" class="hidden">
+              <div id="status" class="rounded-lg border px-4 py-3 text-sm" aria-live="polite"></div>
+            </div>
+          </form>
+        </div>
+
+        <div class="mt-6 text-xs text-gray-500">
+          This tool targets the same high-res fully-resolved case described in the repository README.
+        </div>
+      </div>
+    </div>
 
     <!-- CSV parsing (PapaParse) and XLSX generation (SheetJS) -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="./app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
   </body>
 </html>

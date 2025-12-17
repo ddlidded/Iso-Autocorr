@@ -5,9 +5,17 @@ const TR_SYMBOLS = ["C", "N", "D", "O"]; // for isotopeLabel parsing
 const ABUNDANCE = [0.0107, 0.00364, 0.00001, 0.00187]; // natural isotope abundances (MATLAB Autocorr.m)
 
 function setStatus(msg, isError = false) {
+  const wrap = document.getElementById("statusWrap");
   const el = document.getElementById("status");
+  wrap?.classList.remove("hidden");
+
+  // Flowbite-ish alert styling
+  const base = "border rounded-lg px-4 py-3 text-sm";
+  const info = "text-blue-800 border-blue-200 bg-blue-50";
+  const danger = "text-red-800 border-red-200 bg-red-50";
+
+  el.className = `${base} ${isError ? danger : info}`;
   el.textContent = msg;
-  el.classList.toggle("error", isError);
 }
 
 function comb(n, k) {
