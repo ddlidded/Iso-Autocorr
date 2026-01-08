@@ -1,0 +1,101 @@
+:root {
+  --bg: #0b1220;
+  --card: #0f1a2e;
+  --text: #e7eefc;
+  --muted: #a7b4d1;
+  --border: #223458;
+  --accent: #67b0ff;
+  --danger: #ff6b6b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: radial-gradient(1200px 700px at 20% 0%, #132448 0%, var(--bg) 55%);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.card {
+  width: min(880px, 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+}
+
+h1 { margin: 0 0 10px; font-size: 28px; letter-spacing: 0.2px; }
+
+.muted { color: var(--muted); }
+.tiny { font-size: 12px; }
+
+code {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.form { margin-top: 16px; display: grid; gap: 14px; }
+
+label > span { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+
+input[type="file"], input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.18);
+  color: var(--text);
+}
+
+fieldset {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+legend {
+  padding: 0 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+button {
+  justify-self: start;
+  border: 1px solid rgba(103, 176, 255, 0.35);
+  background: linear-gradient(180deg, rgba(103,176,255,0.35), rgba(103,176,255,0.18));
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover { border-color: rgba(103, 176, 255, 0.6); }
+
+.flash {
+  margin-top: 12px;
+  border: 1px solid rgba(255, 107, 107, 0.35);
+  background: rgba(255, 107, 107, 0.10);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.flash-item { color: #ffd6d6; font-size: 13px; }
+
+@media (max-width: 720px) {
+  .grid { grid-template-columns: 1fr; }
+}
